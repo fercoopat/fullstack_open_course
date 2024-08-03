@@ -1,93 +1,82 @@
 import { useEffect, useState } from 'react';
+import ConditionContainer from './components/ConditionContainer';
+import CountryDetails from './components/CountryDetails';
+import CountryList from './components/CountryList';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
-import PersonForm from './components/PersonForm';
-import PersonList from './components/PersonList';
-import { showConfirmMessage } from './helpers/common.helpers';
-import { saveOrUpdatePersons, updatePersons } from './helpers/person.helpers';
-import personService from './services/person.service';
+import { INFO_MESSAGE } from './constants/notification-messages';
+import { showErrorMessage } from './helpers/common.helpers';
+import { filterCountries, getAllCountries } from './helpers/countries.helpers';
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [filter, setFilter] = useState('');
-  const [notification, setNotification] = useState({ message: null, type: '' });
+  const [search, setSearch] = useState('');
+  const [countries, setCountries] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const [countryDetails, setCountryDetails] = useState(null);
 
-  const filteredPersons = [...persons]?.filter((person) =>
-    person.name.toLowerCase().includes(filter)
-  );
+  const filteredCountries = filterCountries(countries, search);
 
-  const handleChangeName = (e) => setNewName(e.target.value);
-  const handleChangeNumber = (e) => setNewNumber(e.target.value);
-  const handleChangeFilter = (e) =>
-    setFilter(e.target.value.trim().toLowerCase());
+  const showInfoNotification = filteredCountries?.length > 10 && !isLoading;
 
-  const showErrorMessage = (message) => {
-    setNotification({ message, type: 'error' });
-    setTimeout(() => {
-      setNotification(null);
-    }, 2500);
-  };
-
-  const showSuccessMessage = (message) => {
-    setNotification({ message, type: 'success' });
-    setTimeout(() => {
-      setNotification(null);
-    }, 2500);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!newName) return;
-    const payload = { name: newName, number: newNumber };
-    saveOrUpdatePersons(payload, persons)
-      .then((newPerson) => {
-        setPersons(updatePersons(persons, newPerson));
-        showSuccessMessage(`${payload.name} added successfully!`);
-      })
-      .catch(() => {
-        showErrorMessage("Can't perform this action!");
-      });
-    setNewName('');
-    setNewNumber('');
-  };
-
-  const handleDelete = (id) => () => {
-    if (showConfirmMessage(`Delete the person whit id: ${id}?`)) {
-      personService
-        .remove(id)
-        .then(() => {
-          setPersons((prev) => prev.filter((person) => person.id !== id));
-          showSuccessMessage('Person removed successfully!');
-        })
-        .catch(() => {
-          showErrorMessage(`Can't remove person with id: ${id}`);
-        });
+  const handleSearchChange = (e) => {
+    if (filteredCountries?.length > 1) {
+      setCountryDetails(null);
     }
+    setSearch(e.target.value.trim().toLowerCase());
+  };
+
+  const handleShowCountryDetails = (country) => () => {
+    setCountryDetails(country);
   };
 
   useEffect(() => {
-    personService.getAll().then((persons) => setPersons(persons));
+    setIsLoading(true);
+    getAllCountries()
+      .then((countries) => setCountries(countries))
+      .catch(() => showErrorMessage('Something went wrong!', setNotification))
+      .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (filteredCountries?.length === 1) {
+      setCountryDetails(filteredCountries?.[0]);
+    }
+  }, [filteredCountries]);
 
   return (
     <div>
-      <h1>Phonebook</h1>
-      {!!notification && (
-        <Notification message={notification.message} type={notification.type} />
-      )}
-      <Filter filter={filter} onChange={handleChangeFilter} />
-      <h2>Add a new</h2>
-      <PersonForm
-        newName={newName}
-        newNumber={newNumber}
-        onChangeName={handleChangeName}
-        onChangeNumber={handleChangeNumber}
-        onSubmit={handleSubmit}
-      />
-      <h2>Numbers</h2>
-      <PersonList persons={filteredPersons} onDelete={handleDelete} />
+      <h1>Countries</h1>
+      {!!notification && <Notification notification={notification} />}
+      <ConditionContainer
+        isActive={isLoading}
+        alternative={<p>⏲️ Loading, please wait...</p>}
+      >
+        <Filter
+          label='Find countries'
+          disabled={isLoading}
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <ConditionContainer
+          isActive={showInfoNotification}
+          alternative={
+            <div style={{ marginTop: 10 }}>
+              <Notification notification={INFO_MESSAGE} />
+            </div>
+          }
+        >
+          <ConditionContainer
+            isActive={!!countryDetails}
+            alternative={<CountryDetails country={countryDetails} />}
+          >
+            <CountryList
+              countries={filteredCountries}
+              onClick={handleShowCountryDetails}
+            />
+          </ConditionContainer>
+        </ConditionContainer>
+      </ConditionContainer>
     </div>
   );
 };

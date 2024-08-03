@@ -1,6 +1,6 @@
-export default function Notification({ message, type }) {
-  if (message === null || !message) {
+export default function Notification({ notification }) {
+  if (notification?.message === null || !notification?.message) {
     return null;
   }
-  return <div className={type}>{message}</div>;
+  return <div className={notification?.type}>{notification?.message}</div>;
 }
