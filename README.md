@@ -6,3 +6,5 @@ This is a repository for make my exercises from the Fullstack Open Course from t
 
 - [x] part0
 - [x] part1
+- [x] part2
+- [ ] part3
