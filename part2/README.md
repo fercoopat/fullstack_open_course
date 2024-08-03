@@ -1,4 +1,4 @@
-# Part2 - Fullstack
+# Part2 - Server Communication
 
 ## Exercises
 
