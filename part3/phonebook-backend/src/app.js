@@ -12,6 +12,7 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan(requestLogger));
+app.use(express.static('dist'));
 
 app.get('/info', (req, res) => {
   return res.send(`
