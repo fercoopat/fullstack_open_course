@@ -7,4 +7,5 @@ This is a repository for make my exercises from the [Fullstack Open Course](http
 - [x] part0
 - [x] part1
 - [x] part2
-- [ ] part3
+- [x] part3
+- [ ] part4
