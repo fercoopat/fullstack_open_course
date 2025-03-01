@@ -10,7 +10,12 @@ export default function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPersons((prev) => [...prev, { name: newName?.trim() }]);
+    const name = newName?.trim();
+    if (persons?.some((person) => person?.name === name)) {
+      window.alert(`${newName} is already added to phonebook`);
+    } else {
+      setPersons((prev) => [...prev, { name }]);
+    }
     setNewName('');
   };
 
