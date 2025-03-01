@@ -1,39 +1,54 @@
 import { useState } from 'react';
 
 export default function App() {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
-  const [newName, setNewName] = useState('');
-
-  const handleChangeName = (e) => {
-    setNewName(e?.target?.value);
-  };
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '39-44-5323523' },
+  ]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const name = newName?.trim();
-    if (persons?.some((person) => person?.name === name)) {
-      window.alert(`${newName} is already added to phonebook`);
+    e?.preventDefault();
+    const formData = Object.fromEntries(new FormData(e?.target));
+
+    if (persons?.some((person) => person?.name === formData?.name)) {
+      window.alert(`${formData?.name} is already added to phonebook`);
+    } else if (persons?.some((person) => person?.number === formData?.number)) {
+      window.alert(`${formData?.number} is already added to phonebook`);
     } else {
-      setPersons((prev) => [...prev, { name }]);
+      setPersons((prev) => [...prev, formData]);
     }
-    setNewName('');
+
+    e?.target?.reset();
   };
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          name:{' '}
-          <input type='text' value={newName} onChange={handleChangeName} />
-        </div>
-        <div>
-          <button type='submit'>add</button>
-        </div>
+        <fieldset>
+          <legend>Add persons to phonebook</legend>
+          <p>
+            <label htmlFor='name'>Name: </label>
+            <input required type='text' name='name' />
+          </p>
+          <p>
+            <label htmlFor='number'>Number: </label>
+            <input
+              required
+              type='tel'
+              name='number'
+              pattern='[0-9]{2}-[0-9]{2}-[0-9]{7}'
+            />
+          </p>
+          <p>
+            <button type='submit'>add</button>
+          </p>
+        </fieldset>
       </form>
       <h2>Numbers</h2>
       {persons?.map((person, index) => (
-        <p key={index}>{person?.name}</p>
+        <p key={index}>
+          {person?.name} {person?.number}
+        </p>
       ))}
     </div>
   );
