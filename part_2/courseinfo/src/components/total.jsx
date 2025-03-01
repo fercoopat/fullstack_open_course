@@ -6,5 +6,5 @@ export default function Total({ parts = [] }) {
       0
     );
 
-  return <p>Number of exercises {total}</p>;
+  return <p style={{ fontWeight: 600 }}>Total of {total} exercises</p>;
 }
