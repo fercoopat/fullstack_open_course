@@ -1,6 +1,6 @@
 import { getAverage, getPositiveFeedback } from '../helpers/results.helpers';
 
-export default function Results({ good, neutral, bad }) {
+export default function Statistics({ good, neutral, bad }) {
   const all = good + neutral + bad || 0;
   const average = getAverage(good, neutral, bad);
   const positive = getPositiveFeedback(good, all);

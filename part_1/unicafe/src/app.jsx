@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Actions from './components/actions';
 import Header from './components/header';
-import Results from './components/results';
+import Statistics from './components/statistics';
 
 export default function App() {
   const [good, setGood] = useState(0);
@@ -24,7 +24,7 @@ export default function App() {
     <div>
       <Header />
       <Actions onClick={handleSuggestion} />
-      <Results good={good} neutral={neutral} bad={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 }
