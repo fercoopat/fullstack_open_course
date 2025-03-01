@@ -27,14 +27,26 @@ export default function App() {
     setVotes(votesCopy);
   };
 
+  let anecdoteMoreVoted = 0;
+
+  for (let index = 0; index < votes.length; index++) {
+    if (votes[anecdoteMoreVoted] < votes[index]) {
+      anecdoteMoreVoted = index;
+    }
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <button onClick={handleClick}>Next anecdote</button>
         <button onClick={handleVote}>Vote</button>
       </div>
       <p>{anecdotes[selected]}</p>
       <p>Has {votes[selected]} votes</p>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[anecdoteMoreVoted]}</p>
+      <p>Has {votes[anecdoteMoreVoted]} votes</p>
     </div>
   );
 }
