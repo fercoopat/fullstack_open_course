@@ -21,11 +21,17 @@ export default function PersonForm({ persons, onAddPerson }) {
         <legend style={{ fontWeight: 600 }}>Add a new</legend>
         <div style={{ marginBlock: '1rem' }}>
           <label htmlFor='name'>Name: </label>
-          <input required type='text' name='name' />
+          <input required type='text' id='name' name='name' />
         </div>
         <div style={{ marginBottom: '1rem' }}>
           <label htmlFor='number'>Number: </label>
-          <input required type='tel' name='number' pattern='[0-9]{10}' />
+          <input
+            required
+            type='tel'
+            id='number'
+            name='number'
+            pattern='[0-9]{10}'
+          />
         </div>
         <div style={{ marginBottom: '1rem' }}>
           <button type='submit'>+ Add</button>
