@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { addPerson, deletePerson, getPersons } from './api/persons';
+import {
+  addPerson,
+  deletePerson,
+  getPersons,
+  updatePerson,
+} from './api/persons';
 import Filter from './components/filter';
 import PersonForm from './components/person-form';
 import Persons from './components/persons';
@@ -8,9 +13,24 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [persons, setPersons] = useState([]);
 
-  const handleAddPerson = async (newPerson) => {
-    const data = await addPerson(newPerson);
-    setPersons((prev) => [...prev, data]);
+  const handleSubmit = async (payload) => {
+    const person = persons?.find((person) => person?.name === payload?.name);
+
+    if (!person) {
+      const newPerson = await addPerson(payload);
+      setPersons((prev) => [...prev, newPerson]);
+    } else if (
+      window.confirm(
+        `${person?.name} is already added to phonebook, replace the old number with a new one?`
+      )
+    ) {
+      const newPerson = await updatePerson(person.id, payload);
+      setPersons(
+        persons?.map((person) =>
+          person.id === newPerson.id ? newPerson : person
+        )
+      );
+    }
   };
 
   const handleSearch = (e) => {
@@ -32,7 +52,7 @@ export default function App() {
     <div>
       <h1>Phonebook</h1>
       <Filter search={search} onSearch={handleSearch} />
-      <PersonForm persons={persons} onAddPerson={handleAddPerson} />
+      <PersonForm onSubmit={handleSubmit} />
       <Persons
         persons={[...persons]?.filter((p) =>
           p?.name?.toLowerCase().includes(search?.toLowerCase())

@@ -1,16 +1,10 @@
-export default function PersonForm({ persons, onAddPerson }) {
+export default function PersonForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e?.preventDefault();
 
     const formData = Object.fromEntries(new FormData(e?.target));
 
-    if (persons?.some((person) => person?.name === formData?.name)) {
-      window.alert(`${formData?.name} is already added to phonebook`);
-    } else if (persons?.some((person) => person?.number === formData?.number)) {
-      window.alert(`${formData?.number} is already added to phonebook`);
-    } else {
-      onAddPerson(formData);
-    }
+    onSubmit(formData);
 
     e?.target?.reset();
   };
