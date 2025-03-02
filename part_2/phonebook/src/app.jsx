@@ -37,21 +37,37 @@ export default function App() {
     const person = persons?.find((person) => person?.name === payload?.name);
 
     if (!person) {
-      const newPerson = await addPerson(payload);
-      setPersons((prev) => [...prev, newPerson]);
-      handleShowNotification('success', `Added ${newPerson.name}`);
+      try {
+        const newPerson = await addPerson(payload);
+        setPersons((prev) => [...prev, newPerson]);
+        handleShowNotification('success', `Added ${newPerson.name}`);
+      } catch (error) {
+        handleShowNotification(
+          'error',
+          `Information of '${person.name}' has already been removed from server`
+        );
+        setPersons(persons.filter((p) => p.id !== person.id));
+      }
     } else if (
       window.confirm(
         `${person?.name} is already added to phonebook, replace the old number with a new one?`
       )
     ) {
-      const newPerson = await updatePerson(person.id, payload);
-      setPersons(
-        persons?.map((person) =>
-          person.id === newPerson.id ? newPerson : person
-        )
-      );
-      handleShowNotification('success', `${newPerson.name} number updated`);
+      try {
+        const newPerson = await updatePerson(person.id, payload);
+        setPersons(
+          persons?.map((person) =>
+            person.id === newPerson.id ? newPerson : person
+          )
+        );
+        handleShowNotification('success', `${newPerson.name} number updated`);
+      } catch (error) {
+        handleShowNotification(
+          'error',
+          `Information of '${person.name}' has already been removed from server`
+        );
+        setPersons(persons.filter((p) => p.id !== person.id));
+      }
     }
   };
 
