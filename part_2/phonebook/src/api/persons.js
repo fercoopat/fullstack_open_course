@@ -13,3 +13,9 @@ export const addPerson = async (newPerson) => {
 
   return data;
 };
+
+export const deletePerson = async (personId) => {
+  const { data } = await ApiClient.delete(`${RESOURCE}/${personId}`);
+
+  return data;
+};

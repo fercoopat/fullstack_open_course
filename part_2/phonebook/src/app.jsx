@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { addPerson, getPersons } from './api/persons';
+import { addPerson, deletePerson, getPersons } from './api/persons';
 import Filter from './components/filter';
 import PersonForm from './components/person-form';
 import Persons from './components/persons';
@@ -17,6 +17,13 @@ export default function App() {
     setSearch(e?.target?.value);
   };
 
+  const handleDelete = (person) => async () => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      const data = await deletePerson(person.id);
+      setPersons((prev) => prev?.filter((p) => p.id !== data.id));
+    }
+  };
+
   useEffect(() => {
     getPersons().then((data) => setPersons(data));
   }, []);
@@ -30,6 +37,7 @@ export default function App() {
         persons={[...persons]?.filter((p) =>
           p?.name?.toLowerCase().includes(search?.toLowerCase())
         )}
+        onDelete={handleDelete}
       />
     </div>
   );
