@@ -42,11 +42,13 @@ export default function App() {
         setPersons((prev) => [...prev, newPerson]);
         handleShowNotification('success', `Added ${newPerson.name}`);
       } catch (error) {
-        handleShowNotification(
-          'error',
-          `Information of '${person.name}' has already been removed from server`
-        );
-        setPersons(persons.filter((p) => p.id !== person.id));
+        if (error) {
+          handleShowNotification(
+            'error',
+            `Information of '${person.name}' has already been removed from server`
+          );
+          setPersons(persons.filter((p) => p.id !== person.id));
+        }
       }
     } else if (
       window.confirm(
@@ -62,11 +64,13 @@ export default function App() {
         );
         handleShowNotification('success', `${newPerson.name} number updated`);
       } catch (error) {
-        handleShowNotification(
-          'error',
-          `Information of '${person.name}' has already been removed from server`
-        );
-        setPersons(persons.filter((p) => p.id !== person.id));
+        if (error) {
+          handleShowNotification(
+            'error',
+            `Information of '${person.name}' has already been removed from server`
+          );
+          setPersons(persons.filter((p) => p.id !== person.id));
+        }
       }
     }
   };
