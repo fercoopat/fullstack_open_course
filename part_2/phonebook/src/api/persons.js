@@ -5,3 +5,9 @@ export const getPersons = async () => {
 
   return data;
 };
+
+export const addPerson = async (newPerson) => {
+  const { data } = await ApiClient.post('/persons', newPerson);
+
+  return data;
+};

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getPersons } from './api/persons';
+import { addPerson, getPersons } from './api/persons';
 import Filter from './components/filter';
 import PersonForm from './components/person-form';
 import Persons from './components/persons';
@@ -8,8 +8,9 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [persons, setPersons] = useState([]);
 
-  const handleAddPerson = (newPerson) => {
-    setPersons((prev) => [...prev, newPerson]);
+  const handleAddPerson = async (newPerson) => {
+    const data = await addPerson(newPerson);
+    setPersons((prev) => [...prev, data]);
   };
 
   const handleSearch = (e) => {
