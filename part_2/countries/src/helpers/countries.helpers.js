@@ -17,7 +17,11 @@ export const searchCountries = async (search = '') => {
 };
 
 export const getOneCountry = async (name) => {
-  const { data } = await CountriesService.getOneCountry(name);
+  if (!name) {
+    return;
+  }
+
+  const { data } = await CountriesService.findOne(name);
 
   return data;
 };

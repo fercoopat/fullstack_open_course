@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const Instance = new axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://studies.cs.helsinki.fi',
 });
 
 export class ApiClient {
@@ -9,23 +9,23 @@ export class ApiClient {
     this.path = path;
   }
 
-  async findAll() {
-    return await Instance.get(this.path);
+  async get(path = this.path) {
+    return await Instance.get(path);
   }
 
-  async findOne(id) {
-    return await Instance.get(`${this.path}/${id}`);
+  async post(path = this.path, payload) {
+    return await Instance.post(path, payload);
   }
 
-  async create(payload) {
-    return await Instance.post(this.path, payload);
+  async put(path = this.path, payload) {
+    return await Instance.put(path, payload);
   }
 
-  async update(id, payload) {
-    return await Instance.patch(`${this.path}/${id}`, payload);
+  async patch(path = this.path, payload) {
+    return await Instance.patch(path, payload);
   }
 
-  async delete(id) {
-    return await Instance.delete(`${this.path}/${id}`);
+  async delete(path) {
+    return await Instance.delete(path);
   }
 }
