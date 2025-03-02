@@ -6,12 +6,32 @@ import {
   updatePerson,
 } from './api/persons';
 import Filter from './components/filter';
+import Notification from './components/notification';
 import PersonForm from './components/person-form';
 import Persons from './components/persons';
+
+import './app.css';
+
+const DEFAULT_NOTIFICATION = {
+  type: 'error',
+  message: '',
+};
 
 export default function App() {
   const [search, setSearch] = useState('');
   const [persons, setPersons] = useState([]);
+  const [notification, setNotification] = useState(DEFAULT_NOTIFICATION);
+
+  const filteredPersons = [...persons]?.filter((p) =>
+    p?.name?.toLowerCase().includes(search?.toLowerCase())
+  );
+
+  const handleShowNotification = (type, message) => {
+    setNotification({ type, message });
+    setTimeout(() => {
+      setNotification(DEFAULT_NOTIFICATION);
+    }, 3000);
+  };
 
   const handleSubmit = async (payload) => {
     const person = persons?.find((person) => person?.name === payload?.name);
@@ -19,6 +39,7 @@ export default function App() {
     if (!person) {
       const newPerson = await addPerson(payload);
       setPersons((prev) => [...prev, newPerson]);
+      handleShowNotification('success', `Added ${newPerson.name}`);
     } else if (
       window.confirm(
         `${person?.name} is already added to phonebook, replace the old number with a new one?`
@@ -30,6 +51,7 @@ export default function App() {
           person.id === newPerson.id ? newPerson : person
         )
       );
+      handleShowNotification('success', `${newPerson.name} number updated`);
     }
   };
 
@@ -51,14 +73,10 @@ export default function App() {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification notification={notification} />
       <Filter search={search} onSearch={handleSearch} />
       <PersonForm onSubmit={handleSubmit} />
-      <Persons
-        persons={[...persons]?.filter((p) =>
-          p?.name?.toLowerCase().includes(search?.toLowerCase())
-        )}
-        onDelete={handleDelete}
-      />
+      <Persons persons={filteredPersons} onDelete={handleDelete} />
     </div>
   );
 }
