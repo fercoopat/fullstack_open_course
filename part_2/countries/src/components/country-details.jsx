@@ -1,3 +1,5 @@
+import WeatherDetails from './weather-details';
+
 export default function CountryDetails({ country }) {
   if (!country) {
     return null;
@@ -18,6 +20,7 @@ export default function CountryDetails({ country }) {
         src={country.flags.svg}
         alt={country.name.common}
       />
+      <WeatherDetails country={country} />
     </div>
   );
 }

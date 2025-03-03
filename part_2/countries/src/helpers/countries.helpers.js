@@ -1,4 +1,4 @@
-import { CountriesService } from '../api';
+import { CountriesService, WeatherService } from '../api';
 
 export const getCountries = async () => {
   const { data } = await CountriesService.findAll();
@@ -25,3 +25,16 @@ export const getOneCountry = async (name) => {
 
   return data;
 };
+
+export const getCityWeather = async (city) => {
+  if (!city) {
+    return;
+  }
+
+  const { data } = await WeatherService.findOne(city);
+
+  return data;
+};
+
+export const getWeatherIcon = (icon) =>
+  `https://openweathermap.org/img/wn/${icon}@2x.png`;

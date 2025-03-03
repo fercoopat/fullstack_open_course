@@ -1,5 +1,7 @@
 import { ApiClient } from './api-cilent';
 
+const RESOURCE = 'https://studies.cs.helsinki.fi/restcountries/api';
+
 class CountriesService extends ApiClient {
   async findAll() {
     return await this.get(`${this.path}/all`);
@@ -10,4 +12,4 @@ class CountriesService extends ApiClient {
   }
 }
 
-export default new CountriesService('/restcountries/api');
+export default new CountriesService(RESOURCE);

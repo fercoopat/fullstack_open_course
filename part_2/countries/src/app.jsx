@@ -4,6 +4,7 @@ import Results from './components/results';
 import { getOneCountry, searchCountries } from './helpers/countries.helpers';
 
 import './app.css';
+import { OPEN_WEATHER_KEY } from './constants/envs';
 
 export default function App() {
   const [search, setSearch] = useState('');
