@@ -1,9 +1,12 @@
 import express, { request, response } from 'express';
+import morgan from 'morgan';
 import { PORT } from './constants/envs.mjs';
+import { unknownEndpoint } from './middlewares/common.middlewares.mjs';
 
 const app = express();
 
 app.use(express.json());
+app.use(morgan('tiny'));
 
 const persons = [
   {
@@ -48,8 +51,6 @@ app.post('/api/persons', (req = request, res = response) => {
 
   const personIndex = persons.findIndex((p) => p.name === payload.name);
 
-  console.log(personIndex);
-
   if (personIndex !== -1) {
     return res.status(400).json({ error: 'name must be unique' });
   }
@@ -85,6 +86,8 @@ app.delete('/api/persons/:id', (req = request, res = response) => {
 
   res.send('Person deleted');
 });
+
+app.use(unknownEndpoint);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
