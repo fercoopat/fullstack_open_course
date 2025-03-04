@@ -50,6 +50,19 @@ app.get('/api/persons/:id', (req = request, res = response) => {
   res.json(person);
 });
 
+app.delete('/api/persons/:id', (req = request, res = response) => {
+  const id = req.params.id;
+  const personIndex = persons.findIndex((p) => p.id === id);
+
+  if (!personIndex) {
+    return res.status(404).send('Person not found');
+  }
+
+  persons?.splice(personIndex, 1);
+
+  res.send('Person deleted');
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
