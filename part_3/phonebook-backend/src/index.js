@@ -1,12 +1,11 @@
 import express, { request, response } from 'express';
-import morgan from 'morgan';
 import { PORT } from './constants/envs.mjs';
-import { unknownEndpoint } from './middlewares/common.middlewares.mjs';
+import { logger, unknownEndpoint } from './middlewares/common.middlewares.mjs';
 
 const app = express();
 
 app.use(express.json());
-app.use(morgan('tiny'));
+app.use(logger);
 
 const persons = [
   {
