@@ -1,11 +1,13 @@
 import express, { request, response } from 'express';
 import { PORT } from './constants/envs.mjs';
 import { logger, unknownEndpoint } from './middlewares/common.middlewares.mjs';
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
 app.use(logger);
+app.use(cors());
 
 const persons = [
   {
