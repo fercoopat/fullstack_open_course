@@ -41,10 +41,24 @@ app.get('/api/persons', (req = request, res = response) => {
 
 app.post('/api/persons', (req = request, res = response) => {
   const payload = req.body;
+
+  if (!payload?.name || !payload?.number) {
+    return res.status(400).json({ error: 'name or number is missing' });
+  }
+
+  const personIndex = persons.findIndex((p) => p.name === payload.name);
+
+  console.log(personIndex);
+
+  if (personIndex !== -1) {
+    return res.status(400).json({ error: 'name must be unique' });
+  }
+
   persons.push({
     ...payload,
     id: Math.ceil(Math.random() * 1000).toString(),
   });
+
   res.json(persons);
 });
 
@@ -63,7 +77,7 @@ app.delete('/api/persons/:id', (req = request, res = response) => {
   const id = req.params.id;
   const personIndex = persons.findIndex((p) => p.id === id);
 
-  if (!personIndex) {
+  if (personIndex === -1) {
     return res.status(404).send('Person not found');
   }
 
