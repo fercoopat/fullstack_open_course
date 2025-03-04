@@ -39,6 +39,15 @@ app.get('/api/persons', (req = request, res = response) => {
   res.json(persons);
 });
 
+app.post('/api/persons', (req = request, res = response) => {
+  const payload = req.body;
+  persons.push({
+    ...payload,
+    id: Math.ceil(Math.random() * 1000).toString(),
+  });
+  res.json(persons);
+});
+
 app.get('/api/persons/:id', (req = request, res = response) => {
   const id = req.params.id;
   const person = persons.find((p) => p.id === id);
