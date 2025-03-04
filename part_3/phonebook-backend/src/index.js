@@ -1,6 +1,9 @@
 import express, { request, response } from 'express';
+import { PORT } from './constants/envs.mjs';
 
 const app = express();
+
+app.use(express.json());
 
 const persons = [
   {
@@ -25,11 +28,16 @@ const persons = [
   },
 ];
 
+app.get('/info', (req = request, res = response) => {
+  res.send(`
+    <p>Phonebook has info for ${persons?.length} people</p>
+    <p>${new Date().toString()}</p>
+    `);
+});
+
 app.get('/api/persons', (req = request, res = response) => {
   res.json(persons);
 });
-
-const PORT = 3001;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
