@@ -9,8 +9,8 @@ export default function Persons({ persons, onDelete }) {
         </tr>
       </thead>
       <tbody>
-        {persons?.map((person) => (
-          <tr key={person.id}>
+        {persons?.map((person, index) => (
+          <tr key={person._id || index}>
             <td>{person?.name}</td>
             <td>{person?.number}</td>
             <td>

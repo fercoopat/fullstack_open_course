@@ -40,7 +40,7 @@ export default function App() {
     if (!person) {
       try {
         const updatedPersons = await createPerson(payload);
-        setPersons(updatedPersons);
+        setPersons((prev) => prev.concat(updatedPersons));
         handleShowNotification('success', `Added ${payload.name}`);
       } catch (error) {
         if (error) {
@@ -48,7 +48,7 @@ export default function App() {
             'error',
             `Information of '${person.name}' has already been removed from server`
           );
-          setPersons(persons.filter((p) => p.id !== person.id));
+          setPersons(persons.filter((p) => p._id !== person._id));
         }
       }
     } else if (
@@ -57,10 +57,10 @@ export default function App() {
       )
     ) {
       try {
-        const newPerson = await updatePerson(person.id, payload);
+        const newPerson = await updatePerson(person._id, payload);
         setPersons(
           persons?.map((person) =>
-            person.id === newPerson.id ? newPerson : person
+            person._id === newPerson._id ? newPerson : person
           )
         );
         handleShowNotification('success', `${newPerson.name} number updated`);
@@ -70,7 +70,7 @@ export default function App() {
             'error',
             `Information of '${person.name}' has already been removed from server`
           );
-          setPersons(persons.filter((p) => p.id !== person.id));
+          setPersons(persons.filter((p) => p._id !== person._id));
         }
       }
     }
@@ -82,13 +82,15 @@ export default function App() {
 
   const handleDelete = (person) => async () => {
     if (window.confirm(`Delete ${person.name}?`)) {
-      await deletePerson(person.id);
-      setPersons((prev) => prev?.filter((p) => p.id !== person.id));
+      await deletePerson(person._id);
+      setPersons((prev) => prev?.filter((p) => p._id !== person._id));
     }
   };
 
   useEffect(() => {
-    getAllPersons().then((data) => setPersons(data));
+    getAllPersons().then((data) => {
+      setPersons(data);
+    });
   }, []);
 
   return (
