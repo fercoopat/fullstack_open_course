@@ -43,13 +43,12 @@ export default function App() {
         setPersons((prev) => prev.concat(updatedPersons));
         handleShowNotification('success', `Added ${payload.name}`);
       } catch (error) {
-        if (error) {
-          handleShowNotification(
-            'error',
-            `Information of '${person.name}' has already been removed from server`
-          );
-          setPersons(persons.filter((p) => p._id !== person._id));
-        }
+        const message =
+          error?.response?.data?.error ||
+          error?.message ||
+          'Something goes wrong';
+        handleShowNotification('error', message);
+        setPersons(persons.filter((p) => p._id !== person._id));
       }
     } else if (
       window.confirm(
@@ -68,7 +67,7 @@ export default function App() {
         if (error) {
           handleShowNotification(
             'error',
-            `Information of '${person.name}' has already been removed from server`
+            error?.message || 'Something goes wrong'
           );
           setPersons(persons.filter((p) => p._id !== person._id));
         }
@@ -88,9 +87,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    getAllPersons().then((data) => {
-      setPersons(data);
-    });
+    getAllPersons().then((data) => setPersons(data));
   }, []);
 
   return (

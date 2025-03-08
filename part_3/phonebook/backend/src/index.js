@@ -79,7 +79,11 @@ app.patch('/api/persons/:id', (req = request, res = response, next) => {
   const id = req.params.id;
   const payload = req.body;
 
-  Person.findByIdAndUpdate(id, payload, { new: true })
+  Person.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+    context: 'query',
+  })
     .then((person) => {
       if (!person) {
         res.status(404).send('Person not found');
