@@ -24,7 +24,8 @@ export default function PersonForm({ onSubmit }) {
             type='tel'
             id='number'
             name='number'
-            pattern='[0-9]{10}'
+            pattern='^\d{2,3}-\d{6,}$'
+            title='Please enter a valid phone number in the format: 09-1234556 or 040-12345678.'
           />
         </div>
         <div style={{ marginBottom: '1rem' }}>
