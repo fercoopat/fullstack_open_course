@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 await db();
 
-app.get('/info', async (req = request, res = response, next) => {
+app.get('/info', async (_req = request, res = response, next) => {
   Person.find({})
     .then((persons) => {
       res.send(
@@ -34,7 +34,7 @@ app.get('/info', async (req = request, res = response, next) => {
     .catch(next);
 });
 
-app.get('/api/persons', (req = request, res = response, next) => {
+app.get('/api/persons', (_req = request, res = response, next) => {
   Person.find({})
     .then((persons) => {
       res.json(persons);
