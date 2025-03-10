@@ -1,35 +1,14 @@
 import cors from 'cors';
 import express, { json } from 'express';
-import { Schema, connect, model } from 'mongoose';
-import { MONGO_URI, PORT } from './config/envs.js';
+import db from './config/db.js';
+import { PORT } from './config/envs.js';
 import { logger, unknownEndpoint } from './middlewares/common.middlewares.mjs';
 import { errorHandler } from './middlewares/errors.middlewares.mjs';
+import { Blog } from './models/blog.model.js';
 
 const app = express();
 
-const blogSchema = new Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  author: {
-    type: String,
-    required: true,
-  },
-  url: {
-    type: String,
-    required: true,
-  },
-  likes: {
-    type: Number,
-  },
-});
-
-const Blog = model('Blog', blogSchema);
-
-await connect(MONGO_URI).then(() => {
-  console.log('MongoDB connected');
-});
+await db();
 
 app.use(cors());
 app.use(json());
