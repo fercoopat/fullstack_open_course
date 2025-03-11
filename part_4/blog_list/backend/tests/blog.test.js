@@ -1,6 +1,11 @@
 import assert from 'node:assert';
 import { describe, test } from 'node:test';
-import { dummy, favoriteBlog, totalLikes } from '../utils/list-helper.js';
+import {
+  dummy,
+  favoriteBlog,
+  mostBlogs,
+  totalLikes,
+} from '../utils/list-helper.js';
 
 const BLOGS = [
   {
@@ -102,5 +107,22 @@ describe('favorite blog', () => {
   test('of a bigger list returns the blog with more likes', () => {
     const result = favoriteBlog(BLOGS);
     assert.strictEqual(result, BLOGS?.[2]);
+  });
+});
+
+describe('favorite author', () => {
+  test('of empty blog list is null', () => {
+    const result = mostBlogs([]);
+    assert.strictEqual(result, null);
+  });
+
+  test('when list has only one blog, equals the author of the blog and blogs equals 1', () => {
+    const result = mostBlogs([BLOGS?.[0]]);
+    assert.deepStrictEqual(result, { author: BLOGS?.[0]?.author, blogs: 1 });
+  });
+
+  test('of a bigger list returns the author with more blogs and the number of blogs', () => {
+    const result = mostBlogs(BLOGS);
+    assert.deepStrictEqual(result, { author: 'Robert C. Martin', blogs: 3 });
   });
 });

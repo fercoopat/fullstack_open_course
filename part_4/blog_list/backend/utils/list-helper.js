@@ -18,3 +18,34 @@ export const favoriteBlog = (blogs = []) => {
 export const sortBlogsByFav = (blogs = []) => {
   return blogs?.sort((a, b) => b?.likes < a?.likes);
 };
+
+export const mostBlogs = (blogs = []) => {
+  if (!blogs?.length) {
+    return null;
+  }
+
+  const authorCounts = {};
+
+  blogs.forEach((blog) => {
+    if (authorCounts[blog.author]) {
+      authorCounts[blog.author]++;
+    } else {
+      authorCounts[blog.author] = 1;
+    }
+  });
+
+  let topAuthor = null;
+  let maxBlogs = 0;
+
+  for (const author in authorCounts) {
+    if (authorCounts[author] > maxBlogs) {
+      maxBlogs = authorCounts[author];
+      topAuthor = author;
+    }
+  }
+
+  return {
+    author: topAuthor,
+    blogs: maxBlogs,
+  };
+};
