@@ -4,6 +4,7 @@ import {
   dummy,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
   totalLikes,
 } from '../utils/list-helper.js';
 
@@ -110,8 +111,8 @@ describe('favorite blog', () => {
   });
 });
 
-describe('favorite author', () => {
-  test('of empty blog list is null', () => {
+describe('author with most blogs', () => {
+  test('of empty list is null', () => {
     const result = mostBlogs([]);
     assert.strictEqual(result, null);
   });
@@ -124,5 +125,25 @@ describe('favorite author', () => {
   test('of a bigger list returns the author with more blogs and the number of blogs', () => {
     const result = mostBlogs(BLOGS);
     assert.deepStrictEqual(result, { author: 'Robert C. Martin', blogs: 3 });
+  });
+});
+
+describe('favorite author', () => {
+  test('of empty blog list is null', () => {
+    const result = mostLikes([]);
+    assert.strictEqual(result, null);
+  });
+
+  test('when list has only one blog, equals the author of the blog and likes equals the number of likes of the blog', () => {
+    const result = mostLikes([BLOGS?.[0]]);
+    assert.deepStrictEqual(result, {
+      author: BLOGS?.[0]?.author,
+      likes: BLOGS?.[0]?.likes,
+    });
+  });
+
+  test('of a bigger list returns the author with more likes of all his blogs', () => {
+    const result = mostLikes(BLOGS);
+    assert.deepStrictEqual(result, { author: 'Edsger W. Dijkstra', likes: 17 });
   });
 });
