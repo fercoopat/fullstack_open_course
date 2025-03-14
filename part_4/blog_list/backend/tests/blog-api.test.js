@@ -119,6 +119,34 @@ describe('addition of a new blog', () => {
   });
 });
 
+describe('updating a blog likes', () => {
+  test('a blog likes can be updated', async () => {
+    const updatedLikes = 20;
+
+    const response = await api
+      .put(`/api/blogs/${blogId}`)
+      .send({ likes: updatedLikes })
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    assert.strictEqual(
+      response.body.likes,
+      updatedLikes,
+      'The likes should be updated'
+    );
+  });
+
+  test('if blog not exists returns 404', async () => {
+    const nonExistentId = new mongoose.Types.ObjectId().toString();
+    const updatedLikes = 20;
+
+    await api
+      .put(`/api/blogs/${nonExistentId}`)
+      .send({ likes: updatedLikes })
+      .expect(404);
+  });
+});
+
 describe('deletion of a blog', () => {
   test('a blog can be deleted by his id', async () => {
     await api.delete(`/api/blogs/${blogId}`).expect(204);

@@ -28,6 +28,22 @@ app.post('/api/blogs', async (req = request, res = response) => {
   res.status(201).json(result);
 });
 
+app.put('/api/blogs/:id', async (req = request, res = response) => {
+  const id = req.params.id;
+  const payload = req.body;
+
+  const result = await Blog.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!result) {
+    res.status(404).end();
+  } else {
+    res.json(result);
+  }
+});
+
 app.delete('/api/blogs/:id', async (req = request, res = response) => {
   const id = req.params.id;
 
