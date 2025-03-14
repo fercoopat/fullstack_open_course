@@ -53,11 +53,28 @@ test('successfully creates a new blog post', async () => {
     'The number of blogs should increase by one'
   );
 
-  const newBlog = updatedBlogs.find((blog) => blog.title === newBlog.title);
+  const newBlog = updatedBlogs.find((blog) => blog.title === payload.title);
+
   assert.ok(newBlog, 'The new blog post should be saved in the database');
-  assert.strictEqual(newBlog.author, newBlog.author, 'The author should match');
-  assert.strictEqual(newBlog.url, newBlog.url, 'The URL should match');
-  assert.strictEqual(newBlog.likes, newBlog.likes, 'The likes should match');
+  assert.strictEqual(newBlog.author, payload.author, 'The author should match');
+  assert.strictEqual(newBlog.url, payload.url, 'The URL should match');
+  assert.strictEqual(newBlog.likes, payload.likes, 'The likes should match');
+});
+
+test('new blog likes default is 0', async () => {
+  const payload = {
+    title: 'Blog with Missing Likes',
+    author: 'Author',
+    url: 'http://example.com/missing-likes',
+  };
+
+  const response = await api
+    .post('/api/blogs')
+    .send(payload)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  assert.strictEqual(response.body.likes, 0, 'Likes should be 0 by default');
 });
 
 after(async () => {
