@@ -77,6 +77,26 @@ test('new blog likes default is 0', async () => {
   assert.strictEqual(response.body.likes, 0, 'Likes should be 0 by default');
 });
 
+test('if title is missing responds with 400', async () => {
+  const payload = {
+    url: 'http://example.com/missing-likes',
+    author: 'Author',
+    likes: 5,
+  };
+
+  await api.post('/api/blogs').send(payload).expect(400);
+});
+
+test('if url is missing responds with 400', async () => {
+  const payload = {
+    title: 'Some title',
+    author: 'Author',
+    likes: 5,
+  };
+
+  await api.post('/api/blogs').send(payload).expect(400);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
