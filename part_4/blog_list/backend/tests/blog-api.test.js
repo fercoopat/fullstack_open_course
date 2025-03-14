@@ -30,6 +30,36 @@ test('blogs have an id property', async () => {
   assert.ok(response.body[0].id, 'The blog post should have an `id` property');
 });
 
+test('successfully creates a new blog post', async () => {
+  const initialBlogs = await Blog.find({});
+
+  const payload = {
+    title: 'New Blog Post',
+    author: 'New Author',
+    url: 'http://example.com/new',
+    likes: 5,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(payload)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const updatedBlogs = await Blog.find({});
+  assert.strictEqual(
+    updatedBlogs.length,
+    initialBlogs.length + 1,
+    'The number of blogs should increase by one'
+  );
+
+  const newBlog = updatedBlogs.find((blog) => blog.title === newBlog.title);
+  assert.ok(newBlog, 'The new blog post should be saved in the database');
+  assert.strictEqual(newBlog.author, newBlog.author, 'The author should match');
+  assert.strictEqual(newBlog.url, newBlog.url, 'The URL should match');
+  assert.strictEqual(newBlog.likes, newBlog.likes, 'The likes should match');
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
