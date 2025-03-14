@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { json } from 'express';
+import express, { json, request, response } from 'express';
 import 'express-async-errors';
 import db from './config/db.js';
 import { logger, unknownEndpoint } from './middlewares/common.middlewares.mjs';
@@ -14,18 +14,26 @@ app.use(cors());
 app.use(json());
 app.use(logger);
 
-app.get('/api/blogs', async (request, response) => {
+app.get('/api/blogs', async (req = request, res = response) => {
   const blogs = await Blog.find({});
 
-  response.json(blogs);
+  res.json(blogs);
 });
 
-app.post('/api/blogs', async (request, response) => {
-  const blog = new Blog(request.body);
+app.post('/api/blogs', async (req = request, res = response) => {
+  const blog = new Blog(req.body);
 
   const result = await blog.save();
 
-  response.status(201).json(result);
+  res.status(201).json(result);
+});
+
+app.delete('/api/blogs/:id', async (req = request, res = response) => {
+  const id = req.params.id;
+
+  await Blog.findByIdAndDelete(id);
+
+  res.status(204).end();
 });
 
 app.use(unknownEndpoint);
